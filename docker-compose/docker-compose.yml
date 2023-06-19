@@ -1,0 +1,36 @@
+version: '2.3'
+
+volumes:
+  data1-1:
+
+services:
+  rest:
+    image: localrest
+    container_name: rest-iceberg
+    networks:
+      iceberg_net:
+    ports:
+      - 8181:8181
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_SESSION_TOKEN=
+      - AWS_REGION=eu-west-1
+      - CATALOG_WAREHOUSE=s3://cs-tmp/ylebras/
+      - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+      - CATALOG_S3_ENDPOINT=https://s3.eu-west-1.amazonaws.com
+  clickhouse1:
+    depends_on:
+      - rest
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "./_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "./_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "./configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+
+networks:
+  iceberg_net:
+

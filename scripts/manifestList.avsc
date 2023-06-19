@@ -1,0 +1,15 @@
+{
+    "type": "record",
+    "name": "ManifestList",
+    "namespace": "gotest",
+    "fields": [
+    {
+        "name": "manifest_path",
+        "type": "string",
+        "default": ""
+    },{
+        "name": "manifest_length",
+        "type": "int",
+        "default": 0
+    }]
+}

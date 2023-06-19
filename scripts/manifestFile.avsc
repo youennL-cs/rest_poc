@@ -1,0 +1,29 @@
+{
+    "type": "record",
+    "name": "ManifestFile",
+    "namespace": "gotest",
+    "fields": [{
+        "name": "snapshot_id",
+        "type": "int",
+        "default": 0
+    }, {
+        "name": "status",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "data_file",
+        "type": {
+            "type": "record",
+            "name": "data_file",
+            "fields": [ {
+                "name": "file_path",
+                "type": "string",
+                "default": "null"
+            },{
+                "name": "file_format",
+                "type": "string",
+                "default": "null"
+            }]
+        }
+    }]
+}
