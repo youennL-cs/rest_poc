@@ -7,11 +7,15 @@ def manifestFile(idx):
     print("Handle "+str(idx)+".avsc")
     schema = avro.schema.parse(open("manifestFile.avsc", "rb").read())
 
-    writer = DataFileWriter(open(str(idx)+".avro", "wb"), DatumWriter(), schema)
+    writer = DataFileWriter(open("./output/"+str(idx)+".avro", "wb"), DatumWriter(), schema)
     writer.append({
         "data_file": {
+            # "content": 1,
             "file_path": "s3://cs-tmp/ylebras/gotest/data/gotest_upld_"+str(idx)+".parquet",
             "file_format": "PARQUET",
+            # "file_size_in_bytes": 482,
+            # "partition": {},
+            # "record_count": 10,
         },
         "snapshot_id": idx+1,
         "status": 1
@@ -19,7 +23,7 @@ def manifestFile(idx):
 
     writer.close()
 
-    reader = DataFileReader(open(str(idx)+".avro", "rb"), DatumReader())
+    reader = DataFileReader(open("./output/"+str(idx)+".avro", "rb"), DatumReader())
     for user in reader:
         print(user)
     reader.close()
@@ -28,7 +32,7 @@ def manifestList(idx):
     print("Handle snap-"+str(idx)+".avsc")
     schema = avro.schema.parse(open("manifestList.avsc", "rb").read())
 
-    writer = DataFileWriter(open("snap-"+str(idx)+".avro", "wb"), DatumWriter(), schema)
+    writer = DataFileWriter(open("./output/snap-"+str(idx)+".avro", "wb"), DatumWriter(), schema)
     writer.append({
         "manifest_path": "s3://cs-tmp/ylebras/gotest/metadata/"+str(idx)+".avro",
         "manifest_length": 967,
@@ -45,7 +49,7 @@ def manifestList(idx):
 
     writer.close()
 
-    reader = DataFileReader(open("snap-"+str(idx)+".avro", "rb"), DatumReader())
+    reader = DataFileReader(open("./output/snap-"+str(idx)+".avro", "rb"), DatumReader())
     for user in reader:
         print(user)
     reader.close()

@@ -2,3 +2,4 @@
 .avro_
 docker-compose/_instances/clickhouse1/database/
 docker-compose/_instances/clickhouse1/logs/
+script/output/

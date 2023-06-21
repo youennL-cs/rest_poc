@@ -82,9 +82,9 @@ func createTable(name string, ns string, fields string) {
 
 	req.Header.Set("accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
-	fmt.Println("------------------")
-	fmt.Println(req)
-	fmt.Println("------------------")
+	log.Println("------------------")
+	log.Println(req)
+	log.Println("------------------")
 
 	resp, err := client.Do(req)
 	if err != nil {

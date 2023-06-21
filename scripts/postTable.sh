@@ -1,13 +1,17 @@
 #!/bin/bash
 
+TABLENAME="test"
+NAMESPACE="gotest"
+AWSBUCKET="cs-tmp/ylebras"
+
 # create a table "test" where data/ & metadata/ are located in "s3://cs-tmp/ylebras/gotest"
 curl -X 'POST' \
-    'http://localhost:8181/v1/namespaces' \
+    'http://localhost:8181/v1/namespaces/'${NAMESPACE}'/tables' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
-		"name": "test",
-		"location": "s3://cs-tmp/ylebras/gotest",
+		"name": "'$TABLENAME'",
+		"location": "s3://'${AWSBUCKET}'/'${NAMESPACE}'",
 		"schema": {
 			"type": "struct",
 			"schema-id": 0,
