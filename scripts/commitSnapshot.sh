@@ -49,7 +49,7 @@ curl -X 'POST' \
         "action": "add-snapshot",        
         "snapshot": {
         "snapshot-id": '${SNAPID}',
-        "parent-snapshot-id": -1,
+        "parent-snapshot-id": '${PARENTID}',
         "timestamp-ms": '${TIMESTAMP}',
         "manifest-list": "s3://cs-tmp/ylebras/gotest/metadata/snap-'${MANIFESTID}'.avro",
         "summary": {

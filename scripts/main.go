@@ -27,6 +27,7 @@ type Fields struct {
 }
 
 func createNamespace(ns string) {
+	log.Printf("=== Create Namespace %q \n", ns)
 	client := &http.Client{}
 	var data = strings.NewReader(fmt.Sprintf(`{
 		"namespace": [
@@ -53,10 +54,10 @@ func createNamespace(ns string) {
 		log.Fatal(err)
 	}
 	fmt.Printf("%s\n", bodyText)
-	fmt.Println("=== createNamespace Done")
 }
 
 func createTable(name string, ns string, fields string) {
+	log.Printf("=== Create table %q \n", name)
 	client := &http.Client{}
 	var data = strings.NewReader(fmt.Sprintf(`{
 		"name": "%s",
@@ -82,9 +83,6 @@ func createTable(name string, ns string, fields string) {
 
 	req.Header.Set("accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
-	log.Println("------------------")
-	log.Println(req)
-	log.Println("------------------")
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -96,11 +94,11 @@ func createTable(name string, ns string, fields string) {
 		log.Fatal("Do Error:", err)
 	}
 	fmt.Printf("Response: %s\n", bodyText)
-	fmt.Println("=== createTable Done")
 }
 
 // generate 10 lines of Fields in path/pqFile
 func generateParquetEntry(path, pqFile string, startAt int) {
+	log.Println("=== Generate Parquet Entries from", startAt, "to", startAt+9)
 	var err error
 	fw, err := local.NewLocalFileWriter(path + pqFile)
 	if err != nil {
@@ -132,11 +130,10 @@ func generateParquetEntry(path, pqFile string, startAt int) {
 		log.Println("WriteStop error", err)
 		return
 	}
-
-	fmt.Println("=== generateParquetEntry Done")
 }
 
 func uploadFileOnS3(fromPath string, fromFName string, destPath string, destFName string) {
+	log.Println("Upload files on S3")
 	file, err := os.Open(fromPath + fromFName)
 	if err != nil {
 		log.Fatalf("Unable to open file %q, %v", fromFName, err)
@@ -162,7 +159,7 @@ func uploadFileOnS3(fromPath string, fromFName string, destPath string, destFNam
 		log.Fatalf("Unable to upload %q to %q, %v", fromFName, aws_bucket, err)
 	}
 
-	fmt.Printf("Successfully uploaded %q to %q\n", fromFName, aws_bucket)
+	log.Printf("Successfully uploaded %q to %q as %q\n", fromFName, aws_bucket, destFName)
 }
 
 func main() {
@@ -173,8 +170,8 @@ func main() {
 	// Step 2 - creation of the table 'test' in the namesapce 'gotest'
 	// can be commented if exists
 	createTable(
-		"test",
-		"gotest",
+		"test",   // table name
+		"gotest", // namespace
 		`{
 			"id": 1,
 			"field-id":1000,
@@ -182,10 +179,10 @@ func main() {
 			"type": "int",
 			"required": true,
 			"doc": "This is an ID - what did you expect"
-		}`,
+		}`, // fields
 	)
 
-	nbCommits := 1
+	nbCommits := 2
 	for i := 0; i < nbCommits; i++ {
 		// Step 3 - build parquet files with 10 rows of data
 		// can be commented if already existing
@@ -209,5 +206,5 @@ func main() {
 		// 2. curl post each commit
 	}
 
-	fmt.Println("=== Main Done")
+	log.Println("=== Work done.")
 }

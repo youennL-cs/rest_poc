@@ -4,7 +4,7 @@ from avro.io import DatumReader, DatumWriter
 
 
 def manifestFile(idx):
-    print("Handle "+str(idx)+".avsc")
+    print("Create "+str(idx)+".avro")
     schema = avro.schema.parse(open("manifestFile.avsc", "rb").read())
 
     writer = DataFileWriter(open("./output/"+str(idx)+".avro", "wb"), DatumWriter(), schema)
@@ -29,7 +29,7 @@ def manifestFile(idx):
     reader.close()
 
 def manifestList(idx):
-    print("Handle snap-"+str(idx)+".avsc")
+    print("Create snap-"+str(idx)+".avro")
     schema = avro.schema.parse(open("manifestList.avsc", "rb").read())
 
     writer = DataFileWriter(open("./output/snap-"+str(idx)+".avro", "wb"), DatumWriter(), schema)
