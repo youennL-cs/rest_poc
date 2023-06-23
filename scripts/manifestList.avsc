@@ -1,7 +1,7 @@
 {
     "type": "record",
     "name": "ManifestList",
-    "namespace": "gotest",
+    "namespace": "nstest",
     "fields": [
     {
         "name": "manifest_path",
@@ -9,6 +9,34 @@
         "default": ""
     },{
         "name": "manifest_length",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "added_snapshot_id",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "added_data_files_count",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "existing_data_files_count",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "deleted_data_files_count",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "added_data_rows_count",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "existing_rows_count",
+        "type": "int",
+        "default": 0
+    },{
+        "name": "deleted_rows_count",
         "type": "int",
         "default": 0
     }]

@@ -34,7 +34,7 @@ func createNamespace(ns string) {
 			"%s"
 		],
 		"properties": {
-			"owner": "Hank Bendickson"
+			"owner": "root"
 		}
 	}`, ns))
 
@@ -71,7 +71,7 @@ func createTable(name string, ns string, fields string) {
 			},
 			"stage-create": false,
 			"properties": {
-			  "owner": "Hank Bendickson"
+			  "owner": "root"
 			}
 		  }`,
 		name, aws_bucket, ns, fields))
@@ -163,15 +163,15 @@ func uploadFileOnS3(fromPath string, fromFName string, destPath string, destFNam
 }
 
 func main() {
-	// Step 1 - creation of the namespace 'gotest',
+	// Step 1 - creation of the namespace 'nstest',
 	// can be commented if exists.
-	createNamespace("gotest")
+	createNamespace("nstest")
 
-	// Step 2 - creation of the table 'test' in the namesapce 'gotest'
+	// Step 2 - creation of the table 'test' in the namesapce 'nstest'
 	// can be commented if exists
 	createTable(
 		"test",   // table name
-		"gotest", // namespace
+		"nstest", // namespace
 		`{
 			"id": 1,
 			"field-id":1000,
@@ -192,13 +192,13 @@ func main() {
 		// Call python script to generate corresponding manifests
 
 		// Step 4 - Upload parquet files on S3
-		uploadFileOnS3("./output/", "gotest_"+strconv.Itoa(i)+".parquet", "gotest/data/", "gotest_upld_"+strconv.Itoa(i)+".parquet")
+		uploadFileOnS3("./output/", "gotest_"+strconv.Itoa(i)+".parquet", "nstest/data/", "gotest_upld_"+strconv.Itoa(i)+".parquet")
 
 		// Step 4 - Upload manifest Files on S3
-		uploadFileOnS3("./output/", strconv.Itoa(i)+".avro", "gotest/metadata/", strconv.Itoa(i)+".avro")
+		uploadFileOnS3("./output/", strconv.Itoa(i)+".avro", "nstest/metadata/", strconv.Itoa(i)+".avro")
 
 		// Step 4 - Upload manifest Lists on S3
-		uploadFileOnS3("./output/", "snap-"+strconv.Itoa(i)+".avro", "gotest/metadata/", "snap-"+strconv.Itoa(i)+".avro")
+		uploadFileOnS3("./output/", "snap-"+strconv.Itoa(i)+".avro", "nstest/metadata/", "snap-"+strconv.Itoa(i)+".avro")
 
 		// TODO
 		// Step 5 - post commit

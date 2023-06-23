@@ -1,10 +1,10 @@
 #!/bin/bash
 
 TABLENAME="test"
-NAMESPACE="gotest"
+NAMESPACE="nstest"
 AWSBUCKET="cs-tmp/ylebras"
 
-# create a table "test" where data/ & metadata/ are located in "s3://cs-tmp/ylebras/gotest"
+# create a table "test" where data/ & metadata/ are located in "s3://cs-tmp/ylebras/nstest"
 curl -X 'POST' \
     'http://localhost:8181/v1/namespaces/'${NAMESPACE}'/tables' \
     -H 'accept: application/json' \
@@ -28,6 +28,6 @@ curl -X 'POST' \
 			},
 			"stage-create": false,
 			"properties": {
-			  "owner": "Hank Bendickson"
+			  "owner": "root"
 			}
 		}'

@@ -1,7 +1,7 @@
 {
     "type": "record",
     "name": "ManifestFile",
-    "namespace": "gotest",
+    "namespace": "nstest",
     "fields": [{
         "name": "snapshot_id",
         "type": "int",
@@ -15,7 +15,8 @@
         "type": {
             "type": "record",
             "name": "data_file",
-            "fields": [ {
+            "fields": [
+            {
                 "name": "file_path",
                 "type": "string",
                 "default": "null"
@@ -23,6 +24,18 @@
                 "name": "file_format",
                 "type": "string",
                 "default": "null"
+            },{
+                "name": "file_size_in_bytes",
+                "type": "int",
+                "default": 0
+            },{
+                "name": "record_count",
+                "type": "int",
+                "default": 0
+            },{
+                "name": "content",
+                "type": "int",
+                "default": 1
             }]
         }
     }]
