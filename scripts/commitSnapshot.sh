@@ -1,82 +1,86 @@
 #!/bin/bash
 
-if [[ $# -lt 2 ]];
+if [[ $# -lt 4 ]];
 then 
     echo "you must provide the table id & snapeshot-id as follow"
-    echo "commitSnapshot.sh \"<table uuid>\" \"<snapshot-id>\""
+    echo "commitSnapshot.sh \"<table name>\" \"<table uuid>\" \"<table number>\" \"<snapshot-id>\""
+    echo "    - \"table number\": 0 without partition / 1 with partition"
     exit 1
 fi
-
-TABLEID=$1
-SNAPID=$2
+TABLE_NAME=$1
+TABLE_ID=$2
+TABLE_PART=$3
+SNAP_ID=$4
 # for the first commit, parent if is -1
-PARENTID=-1
-MANIFESTID="0"
-SNAPSHOTID=null
+PARENT_ID=-1
+MANIFEST_ID=${TABLE_PART}"0"
+SNAPSHOT_ID=null
 
 # in this logic we consider parent id as the previous number
-if [[ $SNAPID -gt 1 ]];
+if [[ $SNAP_ID -gt 1 ]];
 then 
-    PARENTID="$(($SNAPID - 1))"
-    MANIFESTID="$(($SNAPID - 1))"
-    SNAPSHOTID=$PARENTID
+    PARENT_ID="$(($SNAP_ID - 1))"
+    MANIFEST_ID=${TABLE_PART}"$(($SNAP_ID - 1))"
+    SNAPSHOT_ID=$PARENT_ID
 fi
 
 TIMESTAMP=`echo '('\`date +"%s.%N"\` ' * 1000)/1' | bc`
-FILESIZE=476
-TOTALFILESSIZE=$((${FILESIZE} * ${SNAPID}))
+FILE_SIZE=476
+TOTAL_FILES_SIZE=$((${FILE_SIZE} * ${SNAP_ID}))
 
-echo "added-files-size:" ${FILESIZE}
-echo "total-records:" ${SNAPID}
-echo "total-files-size:" ${TOTALFILESSIZE}
-echo "total-data-files:" ${SNAPID}
+echo "added-files-size:" ${FILE_SIZE}
+echo "total-records:" ${SNAP_ID}
+echo "total-files-size:" ${TOTAL_FILES_SIZE}
+echo "total-data-files:" ${SNAP_ID}
 echo "---"
-echo "TABLEID=" $TABLEID
-echo "SNAPID=" $SNAPID
-echo "PARENTID=" $PARENTID
-echo "MANIFESTID=" $MANIFESTID
-echo "SNAPSHOTID=" $SNAPSHOTID
+echo "TABLE_NAME=" $TABLE_NAME
+echo "TABLE_ID=" $TABLE_ID
+echo "TABLE_PART=" $TABLE_PART
+echo "SNAP_ID=" $SNAP_ID
+echo "PARENT_ID=" $PARENT_ID
+echo "MANIFEST_ID=" $MANIFEST_ID
+echo "SNAPSHOT_ID=" $SNAPSHOT_ID
 echo "TIMESTAMP=" $TIMESTAMP
-echo "FILESIZE=" $FILESIZE
-echo "TOTALFILESSIZE=" $TOTALFILESSIZE
+echo "FILE_SIZE=" $FILE_SIZE
+echo "TOTAL_FILES_SIZE=" $TOTAL_FILES_SIZE
 
 
-# Commit the first snapshot 0.avro / snap-0.avro / gotest_upld_0.parquet files
+# Commit the first snapshot ${TABLE_PART}0.avro / snap-${TABLE_PART}0.avro / gotest_upld_0.parquet files
 # in namespace "nstest" / table "test"
 curl -X 'POST' \
-    'http://localhost:8181/v1/namespaces/nstest/tables/test' \
+    'http://localhost:8181/v1/namespaces/nstest/tables/'$TABLE_NAME'' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
     "requirements": [
     {
         "type": "assert-table-uuid", 
-        "uuid": "'${TABLEID}'"
+        "uuid": "'${TABLE_ID}'"
     },
     {
         "type": "assert-ref-snapshot-id",
         "ref": "main",
-        "snapshot-id": '${SNAPSHOTID}'
+        "snapshot-id": '${SNAPSHOT_ID}'
     }
     ],
     "updates": [
     {
         "action": "add-snapshot",        
         "snapshot": {
-            "snapshot-id": '${SNAPID}',
-            "parent-snapshot-id": '${PARENTID}',
+            "snapshot-id": '${SNAP_ID}',
+            "parent-snapshot-id": '${PARENT_ID}',
             "timestamp-ms": '${TIMESTAMP}',
-            "manifest-list": "s3://cs-tmp/ylebras/nstest/metadata/snap-'${MANIFESTID}'.avro",
+            "manifest-list": "s3://cs-tmp/ylebras/nstest/'${TABLE_NAME}'/metadata/snap-'${MANIFEST_ID}'.avro",
             "schema-id": 0,
             "summary": {
                 "operation": "append",
                 "added-data-files": "1",
                 "added-records": "10",
-                "added-files-size": "'${FILESIZE}'",
+                "added-files-size": "'${FILE_SIZE}'",
                 "changed-partition-count": "0",
-                "total-records": "'${SNAPID}'",
-                "total-files-size": "'${TOTALFILESSIZE}'",
-                "total-data-files": "'${SNAPID}'",
+                "total-records": "'${SNAP_ID}'",
+                "total-files-size": "'${TOTAL_FILES_SIZE}'",
+                "total-data-files": "'${SNAP_ID}'",
                 "total-delete-files": "0",
                 "total-position-deletes": "0",
                 "total-equality-deletes": "0"
@@ -86,7 +90,7 @@ curl -X 'POST' \
     {
         "action": "set-snapshot-ref",
         "type": "branch",
-        "snapshot-id": '${SNAPID}',
+        "snapshot-id": '${SNAP_ID}',
         "ref-name": "main"
     }
     ]
