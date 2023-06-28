@@ -204,12 +204,12 @@ func unpartitionTest(nbCommits int) {
 		"nstest",
 		"s3://" + aws_bucket + "nstest/" + "simpletest",
 		bytes.Buffer{},
-		`{ 
-			"id": 1, 
-			"field-id":1000, 
+		`{
+			"id": 1,
+			"field-id":1000,
 			"name": "id",
-			"type": "int", 
-			"required": true, 
+			"type": "int",
+			"required": true,
 			"doc": "This is an ID - what did you expect"
 		}`,
 	}

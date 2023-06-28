@@ -12,6 +12,10 @@
         "type": "int",
         "default": 0
     },{
+        "name": "partition_spec_id",
+        "type": "int",
+        "default": 0
+    },{
         "name": "added_snapshot_id",
         "type": "int",
         "default": 0
@@ -27,6 +31,30 @@
         "name": "deleted_data_files_count",
         "type": "int",
         "default": 0
+    },{
+        "name": "partitions",
+        "type": {
+            "type": "array",
+            "items":{
+                "name": "partitionsRec",
+                "type": "record",
+                "fields": [
+                    {
+                        "name": "contains_null",
+                        "type": "boolean"
+                    },{
+                        "name": "contains_nan",
+                        "type": "boolean"
+                    },{
+                        "name": "lower_bound",
+                        "type": "bytes"
+                    },{
+                        "name": "upper_bound",
+                        "type": "bytes"
+                    }
+                ]
+            }
+        }
     },{
         "name": "added_data_rows_count",
         "type": "int",

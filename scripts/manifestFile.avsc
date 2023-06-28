@@ -36,6 +36,31 @@
                     "name": "content",
                     "type": "int",
                     "default": 1
+                },{
+                    "name": "partition",
+                    "type": {
+                        "type": "record",
+                        "name": "partition",
+                        "fields": [
+                            {
+                                "name": "source-id",
+                                "type": "int",
+                                "default": 0
+                            },{
+                                "name": "field-id",
+                                "type": "int",
+                                "default": 0
+                            },{
+                                "name": "name",
+                                "type": "string",
+                                "default": ""
+                            },{
+                                "name": "transform",
+                                "type": "string",
+                                "default": 0
+                            }
+                        ]
+                    }
                 }]
             }
         }
