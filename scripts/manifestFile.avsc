@@ -57,7 +57,7 @@
                             },{
                                 "name": "transform",
                                 "type": "string",
-                                "default": 0
+                                "default": ""
                             }
                         ]
                     }

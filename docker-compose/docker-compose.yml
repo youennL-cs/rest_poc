@@ -5,7 +5,7 @@ volumes:
 
 services:
   rest:
-    image: localrest
+    image: tabulario/iceberg-rest
     container_name: rest-iceberg
     networks:
       iceberg_net:
